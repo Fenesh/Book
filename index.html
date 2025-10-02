@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>История корпорации «Синергия» — 1995–2025</title>
+
+  <!-- Шрифт Raleway -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <meta name="color-scheme" content="dark light">
+
+  <style>
+    :root {
+      --red: #E50914;
+      --white: #FFFFFF;
+      --black: #0B0B0B;
+      --gray-1: #C8C8C8;
+      --gray-2: #8E8E8E;
+      --bg: #0E0E0E;
+      --glass: rgba(0,0,0,0.35);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--white);
+      font-family: "Raleway", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* Верхняя панель */
+    .topbar {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 68px;
+      padding: 24px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 20;
+      background: linear-gradient(180deg, rgba(0,0,0,0.75), rgba(0,0,0,0));
+      backdrop-filter: saturate(140%) blur(6px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: .5px;
+    }
+    .logo {
+      width: 40px; 
+      height: 36px; 
+      border-radius: 10px;
+      background: #fff;
+      display: grid; place-items: center;
+      box-shadow: 0 8px 24px rgba(229,9,20,.45), inset 0 1px 0 rgba(255,255,255,.15);
+      font-weight: 800;
+    }
+    .logo img {
+      object-fit: contain;
+      width: 30px;
+    }
+    .tagline {
+      color: var(--gray-1);
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      font-size: 12px;
+      opacity: .9;
+    }
+
+    /* Лента: горизонтальный скролл со снапом */
+    .timeline {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      padding-top: 68px; /* под шапку */
+    }
+
+    .rail {
+      position: absolute;
+      inset: 68px 0 0 0; /* ниже topbar */
+      height: calc(100vh - 68px);
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 100vw;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Стилизация горизонтального скроллбара */
+    .rail::-webkit-scrollbar { height: 10px; }
+    .rail::-webkit-scrollbar-track { background: rgba(255,255,255,0.06); }
+    .rail::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, var(--red), #8b070d);
+      border-radius: 8px;
+    }
+
+    section.slide {
+      position: relative;
+      scroll-snap-align: start;
+      height: 100%;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    /* Фоновое изображение */
+    .slide .bg {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transform: scale(1.05);
+      filter: saturate(105%) contrast(105%);
+      transition: transform 1s ease, filter 0.6s ease;
+      will-change: transform;
+    }
+    .slide:hover .bg { transform: scale(1.08); filter: saturate(115%) contrast(110%); }
+
+    /* Градиент для читаемости текста */
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,.75), rgba(0,0,0,.35) 45%, rgba(0,0,0,.15) 70%, rgba(0,0,0,0) 85%);
+      z-index: 1;
+    }
+
+    /* Контент */
+    .content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 6vh 7vw;
+    }
+    .inner {
+      max-width: min(820px, 70vw);
+      display: grid;
+      gap: 18px;
+      transform: translateY(10px);
+      opacity: 0;
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .slide.in-view .inner { opacity: 1; transform: translateY(0); }
+
+    .year {
+      font-size: clamp(28px, 6vw, 72px);
+      font-weight: 800;
+      letter-spacing: .02em;
+      line-height: 1;
+      color: var(--white);
+      text-shadow: 0 6px 30px rgba(0,0,0,.6);
+    }
+    .title {
+      font-size: clamp(20px, 3vw, 36px);
+      font-weight: 700;
+      color: var(--white);
+    }
+    .desc {
+      font-size: clamp(14px, 1.4vw, 18px);
+      color: var(--gray-1);
+      line-height: 1.65;
+      max-width: 60ch;
+    }
+
+    .chips {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-top: 8px;
+    }
+    .chip {
+      font-size: 12px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--white);
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(4px);
+      transition: transform .25s ease, background .25s ease, border-color .25s ease;
+    }
+    .chip:hover { transform: translateY(-2px); background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.24); }
+
+    .cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      margin-top: 8px;
+      padding: 12px 18px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(145deg, var(--red), #b10710);
+      border: 0;
+      border-radius: 12px;
+      box-shadow: 0 10px 24px rgba(229,9,20,.35);
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .3s ease;
+      text-decoration: none;
+    }
+    .cta:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(229,9,20,.45); }
+    .cta:active { transform: translateY(-1px); }
+
+    /* Навигация по годам снизу */
+    .years-nav {
+      position: fixed;
+      bottom: 12px; left: 0; right: 0;
+      padding: 0 20px;
+      z-index: 25;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .years-nav .wrap {
+      pointer-events: auto;
+      display: flex; gap: 8px;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(6px) saturate(120%);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 12px 10px;
+      box-shadow: var(--shadow);
+      overflow: auto hidden;
+      max-width: min(90vw, 1200px);
+    }
+    .years-nav a {
+      font-size: 12px; font-weight: 700;
+      color: var(--gray-1);
+      padding: 8px 10px;
+      border-radius: 8px;
+      transition: color .2s ease, background .2s ease, transform .2s ease;
+      white-space: nowrap;
+    }
+    .years-nav a:hover { color: #fff; background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+    .years-nav a.active { color: #fff; background: var(--red); }
+
+    /* Кнопки стрелки */
+    .arrows {
+      position: fixed;
+      right: 20px; bottom: 72px;
+      display: flex; gap: 10px;
+      z-index: 25;
+    }
+    .arrow {
+      width: 44px; height: 44px;
+      display: grid; place-items: center;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #fff;
+      cursor: pointer;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease;
+      box-shadow: var(--shadow);
+      user-select: none;
+    }
+    .arrow:hover { transform: translateY(-2px); background: rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.24); }
+    .arrow:active { transform: translateY(-1px); }
+
+    /* Прогресс-бар снизу */
+    .progress {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      height: 3px; z-index: 30;
+      background: rgba(255,255,255,0.06);
+    }
+    .progress .bar {
+      width: 0%; height: 100%;
+      background: linear-gradient(90deg, var(--red), #ff6b6b);
+      transition: width .2s linear;
+    }
+
+    /* Уважение prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      .rail { scroll-behavior: auto; }
+      .slide .bg, .slide .inner { transition: none !important; }
+      .cta, .chip, .arrow { transition: none !important; }
+    }
+
+    /* Адаптив: на узких экранах делаем контент чуть шире и крупнее */
+    @media (max-width: 768px) {
+      .inner { max-width: 88vw; }
+      .desc { font-size: 15px; }
+      .arrows { right: 12px; bottom: 64px; }
+      .topbar { padding: 10px 14px; height: 60px; }
+      .rail { inset: 60px 0 0 0; height: calc(100vh - 60px); }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo"><img src="https://sun9-60.userapi.com/s/v1/ig2/o4BmIizlGv-7oGm-WFIQrSFyEBgTP-HPJK59oib9QzdOoXiIZEw4UqKd4RC9sOdVxwml3RnKOzhecgtHelfDjCLA.jpg?quality=95&as=32x32,48x48,72x73,108x109,160x162,240x242,360x364,480x485,503x508&from=bu&cs=503x0"></div>
+      <div>
+        <div style="font-size:16px; line-height:1; font-weight:800;">Синергия</div>
+        <div style="font-size:12px; color:var(--gray-2); line-height:1;">История 1995–2025</div>
+      </div>
+    </div>
+    <div class="tagline">Корпоративная эволюция, технологии и люди</div>
+  </header>
+
+  <main class="timeline" id="timeline">
+    <div class="rail" id="rail">
+
+      <!-- 1995 -->
+      <section class="slide" id="y1995" data-year="1995">
+        <img class="bg" loading="lazy" alt="Основание компании, офис и первые сервера"
+             src="https://sun9-45.userapi.com/s/v1/if2/C90uR4QfDPNbitgRH52TH2jqdZGMgZKMnUJcNNEfWpWbSjpXfbCYXy3eX-k9r0HBB9VxXKGOtSigsdmUTJVKCtgO.jpg?quality=95&as=32x21,48x32,72x48,108x72,160x107,240x161,360x241,480x321,540x362,640x428,720x482,1080x723,1280x857,1440x964,2560x1714&from=bu&cs=2560x0" />
+        <div class="content">
+          <div class="inner">
+            <div class="year">1995</div>
+            <div class="title">Начало истории </div>
+            <div class="desc">История начинется с Московской высшей банковской школы .</div>
+            <div class="chips">
+              <span class="chip">МВБШ</span><span class="chip">история</span><span class="chip">старт</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!--  2003  ) -->
+      <section class="slide" id="y2003" data-year="2003">
+        <img class="bg" loading="lazy" alt="Собственная софтверная платформа"
+             src="https://sun9-17.userapi.com/s/v1/if2/QNSdFT_QV1XI5vWNJ4Wi4hcWCYAap3kC4HYdW0og_VKPYnv1z_vDizc1XZaKhpOtZ63dp6nJyLtyZbGVWc_YH2z8.jpg?quality=95&as=32x21,48x32,72x48,108x73,160x107,240x161,360x242,480x322,540x363,640x430,720x483,1080x725,1280x859,1440x967,2560x1719&from=bu&cs=2560x0" />
+        <div class="content">
+          <div class="inner">
+            <div class="year">2003</div>
+            <div class="title">МИФП</div>
+            <div class="desc">Институт успешно развивался, закладывая фундамент для будующего расширения и ребрендинга.</div>
+            <div class="chips">
+              <span class="chip">МИФП</span><span class="chip">Развитие</span><span class="chip">Образование</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2010 -->
+      <section class="slide" id="y2010" data-year="2010">
+        <img class="bg" loading="lazy" alt="Кризис и перестройка процессов"
+             src="https://sun9-23.userapi.com/s/v1/if2/pWe9nR6oTOsSLFaH1velK6ntP0AgVHL-dZhDwEwiZIEWxVrPymSUa56XIVcqhLguMhgbMUzMk4yqTHLIXkQ78gVl.jpg?quality=95&as=32x21,48x32,72x48,108x72,160x107,240x160,360x240,480x320,540x360,640x427,720x480,1080x721,1280x854,1440x961,2560x1708&from=bu&cs=2560x0" />
+        <div class="content">
+          <div class="inner">
+            <div class="year">2010</div>
+            <div class="title">МФПА</div>
+            <div class="desc">Институт был реорганизован и переименован в Московскую промышленную академию, что означало выход на новый уровень.</div>
+            <div class="chips">
+              <span class="chip">реорганизация</span><span class="chip">Гибкость</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2012   -->
+      <section class="slide" id="y2012" data-year="2012">
+        <img class="bg" loading="lazy" alt="Выход на международные рынки"
+             src="https://sun9-71.userapi.com/s/v1/if2/HH9U-hY3GWEFk1ZmS-0pmRyknaIgQGsb4f7j8K7X_uG5XUmu4-CitVnd3HGauS0op4MNVhSR3KBt8W1_sRhenjKq.jpg?quality=95&as=32x21,48x32,72x48,108x71,160x106,240x158,360x238,480x317,540x356,640x422,720x475,1080x713,1280x845,1440x951,2560x1690&from=bu&cs=2560x0" />
+        <div class="content">
+          <div class="inner">
+            <div class="year">2012</div>
+            <div class="title">Синергия - SINERGHIA</div>
+            <div class="desc">Академия сменила название на Бизнес-школу «Синергия», сделав ставку на бренд, ориентированный на предпринимательство..</div>
+            <div class="chips">
+              <span class="chip">бизнес-школа</span><span class="chip">предпринимательство</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2013 -->
+      <section class="slide" id="y2013" data-year="2013">
+        <img class="bg" loading="lazy" alt="Облачные сервисы и SaaS"
+             src="https://sun9-52.userapi.com/s/v1/if2/aYVAla6h3xBDf14ykaK5ErYDqT2Q1KtB4V2UKRseNRpbzXfTn0yngPj8K9jdXxC1ThS5aB0dF1Oc9kHA_WN5PrS0.jpg?quality=95&as=32x21,48x32,72x48,108x72,160x107,240x160,360x240,480x320,540x360,640x427,720x480,1080x720,1280x853,1440x960,2560x1707&from=bu&cs=2560x0" />
+        <div class="content">
+          <div class="inner">
+            <div class="year">2013</div>
+            <div class="title">Университет «Синергия»</div>
+            <div class="desc">Бизнес-школа преобразованна в Университет «Синергия», что закрепило его статус, как многопрофильного учебного заведения.</div>
+            <div class="chips">
+              <span class="chip">Университет «Синергия»</span><span class="chip">многопрофильность</span><span class="chip">преобразование</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2014-2025   -->
+      <section class="slide" id="y2014-2025" data-year="2014-2025">
+        <img class="bg" loading="lazy" alt="R&D и машинное обучение"
+             src="https://sun9-41.userapi.com/s/v1/if2/XqHRGxxZHCQg6wTzkh4fNQww2pxKNSbx1zzxFNgpNO74FbWdCb5OJLwhIQoZiPdVCDiv8LSpfUwt6aFUySJzxYeM.jpg?quality=95&as=32x21,48x32,72x48,108x72,160x107,240x160,360x241,480x321,540x361,640x428,720x481,1080x722,1280x855,1440x962,2560x1711&from=bu&cs=2560x0" />
+        <div class="content">
+          <div class="inner">
+            <div class="year">2014-2025</div>
+            <div class="title">Университет «Синергия»</div>
+            <div class="desc">Период активного роста и диджитализации, отмеченный масштабными партнерствами, что превратило университет в крупную образовательную корпорацию с фокусом на технологиях и трудоустройстве. 2025 - 30-й юбилейный год, Корпорация фокусируется на укреплении своих позиций как одного из лидеров российского образовательного рынка.</div>
+            <div class="chips">
+              <span class="chip">лидер образовательного рынка</span><span class="chip">юбилейный год</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Маскоты -->
+      <section class="slide" id="yМаскоты корпорации" data-year="Маскоты корпорации">
+        <img class="bg" loading="lazy" alt="Партнёрская экосистема и маркетплейс"
+             src="https://sun9-27.userapi.com/s/v1/if2/q6rJvTBDeZ4LQxJ9XqNgB61lgcMnvDHRgfwuEAbFkcZOLkJSA2MPiaL4uUslNw18I_mlUjwpN_bDwnZZJpymAq3-.jpg?quality=95&as=32x14,48x20,72x31,108x46,160x68,240x102,360x153,480x204,540x230,640x272,720x306,1080x460,1182x503&from=bu&cs=1182x0" />
+        <div class="content">
+          <div class="inner">
+            <div class="year">Маскоты корпорации</div>
+            <div class="title">«Синергия» и ее маскоты</div>
+            <div class="desc">Можно ли представить себе Синергию без своего маскота? Определенно нет, но
+в разное время этот маскот выглядел по своему. Сейчас мы увидим какие изменения произошли в маскотах к 2025 году.</div>
+            <div class="chips">
+              <span class="chip">АИ-помощники</span><span class="chip">живой образ</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- птица  -->
+      <section class="slide" id="yПтица" data-year="Птица">
+        <img class="bg" loading="lazy" alt="Гибридная работа и безопасность"
+             src="https://sun9-32.userapi.com/s/v1/if2/4jpSGoLLQLWUVkosdT2pxNvQLgwGtN7qc0mlsnKv1jPE2zRy7vieconxMm9H5FZwTDwGG12WHJLSiWe6YeCq98dI.jpg?quality=95&as=32x22,48x32,72x49,108x73,160x108,240x162,360x243,480x323,540x364,640x431,720x485,1080x728,1280x862,1440x970,2560x1725&from=bu&cs=2560x0" />
+        <div class="content">
+          <div class="inner">
+            <div class="year">2008</div>
+            <div class="title">Птичка Мифа</div>
+            <div class="desc">Лёгкость, доступность и творческий полёт.
+Птица — это символ свободы, любознательности
+и нового начала. Её мультяшный, доброжелательный образ транслирует сообщение о открытости, лёгкости обучения
+и творческом подходе..</div>
+            <div class="chips">
+              <span class="chip">Первый маскот</span><span class="chip">птица</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+       <!-- Единорог -->
+      <section class="slide" id="yЕдинорог" data-year="Единорог">
+        <img class="bg" loading="lazy" alt="Партнёрская экосистема и маркетплейс"
+             src="https://sun9-74.userapi.com/s/v1/if2/BbG7jhOH2RY39rbnJfzq2ihjTUQMa3wwBHThPu8vlAGQxsAklAL5yH3CJmW6Llcw73e5HvzlIFJUnqTv_vsAhxrM.jpg?quality=95&as=32x17,48x25,72x38,108x57,160x85,240x127,360x190,480x254,540x286,640x338,720x381,1080x571,1280x677,1440x762,2560x1354&from=bu&cs=2560x0" />
+        <div class="content">
+          <div class="inner">
+            <div class="year">2013</div>
+            <div class="title">Единорог</div>
+            <div class="desc">Белый единорог символизирует чистоту, уникальность и вдохновение — качества, которые отражают стремление университета к новаторству и высокому уровню образования. Его поза на задних ногах с поднятыми передними лапами передает динамичность, готовность к действию и устремленность вверх, что резонирует с миссией университета — вдохновлять студентов стремиться к достижениям и раскрывать свой потенциал.</div>
+            <div class="chips">
+              <span class="chip">уникальность</span><span class="chip">стремление</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Носорог -->
+      <section class="slide" id="yНосорог" data-year="Носорог">
+        <img class="bg" loading="lazy" alt="Переход на микросервисы"
+             src="https://synergy.ru/assets/upload/news/archive/AI5B5432.jpg" />
+        <div class="content">
+          <div class="inner">
+            <div class="year">2015</div>
+            <div class="title">Носорог</div>
+            <div class="desc">Носорог — одно из самых сильных
+и целеустремленных животных в природе.
+Его образ транслирует сообщение о напористости, устойчивости и способности преодолевать любые препятствия. Это напрямую проецируется
+на миссию университета: давать студентам мощную подготовку, позволяющую им уверенно идти к цели..</div>
+            <div class="chips">
+              <span class="chip">сила</span><span class="chip">уверенность</span><span class="chip">мудрость</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Иван -->
+      <section class="slide" id="yИван" data-year="Иван">
+        <img class="bg" loading="lazy" alt="Следующая глава: ИИ‑ассистенты и автономные операции"
+             src="https://sun9-69.userapi.com/s/v1/if2/LrqzNDcqZxpM-PIR3nyhtYwb9pddiGVt_QLvfXqddPsKODzk9nthGEeFP5JoeQ1i8mnSwwcyHMK_az5vKO-2eWfh.jpg?quality=95&as=32x21,48x32,72x48,108x72,160x107,240x160,360x240,480x320,540x360,640x427,720x480,1080x720,1280x853,1440x960,2560x1707&from=bu&cs=2560x0" />
+        <div class="content">
+          <div class="inner">
+            <div class="year">2024</div>
+            <div class="title">Иван</div>
+            <div class="desc">2024 году Макс, которого позже стали звать Иван, стал новым AI ассистентом, который с радостью помогает сотрудникам, студентам
+и абитуриантам с самыми разнымивопросами..</div>
+            <div class="chips">
+              <span class="chip">Технологии</span><span class="chip">Аватар</span><span class="chip">Коммуникации</span>
+            </div>
+            <a class="cta" href="#y1995" title="Вернуться к началу">К началу ↺</a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Навигация по годам (кликабельна) -->
+  <div class="years-nav" aria-label="Навигация по годам">
+    <div class="wrap" id="years">
+      <a href="#y1995">1995</a>
+      <a href="#y2003">2003</a>
+      <a href="#y2010">2010</a>
+      <a href="#y2012">2012</a>
+      <a href="#y2013">2013</a>
+      <a href="#y2014-2025">2014-2025</a>
+      <a href="#yМаскоты корпорации">Маскоты корпорации</a>
+      <a href="#yПтица">Птица</a>
+       <a href="#yЕдинорог">Единорог</a>
+      <a href="#yНосорог">Носорог</a>
+      <a href="#yИван">Иван</a>
+    </div>
+  </div>
+
+  <!-- Стрелки -->
+  <div class="arrows" aria-label="Переход между слайдами">
+    <div class="arrow" id="prev" title="Предыдущий">◀</div>
+    <div class="arrow" id="next" title="Следующий">▶</div>
+  </div>
+
+  <!-- Прогресс -->
+  <div class="progress"><div class="bar" id="bar"></div></div>
+
+  <script>
+    // Помощь: прокрутка колёсиком по вертикали -> горизонтально
+    const rail = document.getElementById('rail');
+    rail.addEventListener('wheel', (e) => {
+      // Разрешаем естественную горизонтальную прокрутку, но
+      // преобразуем вертикальную в горизонтальную
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        rail.scrollLeft += e.deltaY;
+      }
+    }, { passive: false });
+
+    // IntersectionObserver для появления контента и активной подсветки года
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const yearLinks = Array.from(document.querySelectorAll('.years-nav a'));
+    const progressBar = document.getElementById('bar');
+
+    const setActiveYear = (year) => {
+      yearLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#y' + year);
+      });
+    };
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          setActiveYear(entry.target.dataset.year);
+        }
+      });
+    }, { root: rail, threshold: 0.6 });
+
+    slides.forEach(s => io.observe(s));
+
+    // Прогресс скролла
+    const updateProgress = () => {
+      const max = rail.scrollWidth - rail.clientWidth;
+      const p = max > 0 ? (rail.scrollLeft / max) : 0;
+      progressBar.style.width = (p * 100).toFixed(2) + '%';
+    };
+    rail.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+
+    // Кнопки стрелок и клавиши
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+
+    const currentIndex = () => {
+      const rectRail = rail.getBoundingClientRect();
+      let idx = 0;
+      let best = Infinity;
+      slides.forEach((slide, i) => {
+        const r = slide.getBoundingClientRect();
+        const dx = Math.abs(r.left - rectRail.left);
+        if (dx < best) { best = dx; idx = i; }
+      });
+      return idx;
+    };
+
+    const goTo = (i) => {
+      const target = slides[Math.max(0, Math.min(slides.length - 1, i))];
+      target && target.scrollIntoView({ behavior: 'smooth', inline: 'start' });
+    };
+
+    prevBtn.addEventListener('click', () => goTo(currentIndex() - 1));
+    nextBtn.addEventListener('click', () => goTo(currentIndex() + 1));
+
+    document.addEventListener('keydown', (e) => {
+      if (['ArrowRight', 'PageDown'].includes(e.key)) { e.preventDefault(); goTo(currentIndex() + 1); }
+      if (['ArrowLeft', 'PageUp'].includes(e.key))   { e.preventDefault(); goTo(currentIndex() - 1); }
+      if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+      if (e.key === 'End')  { e.preventDefault(); goTo(slides.length - 1); }
+    });
+
+    // Клик по годам — плавная прокрутка
+    yearLinks.forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = a.getAttribute('href').slice(1);
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', inline: 'start' });
+      });
+    });
+  </script>
+</body>
+</html>
